@@ -6,9 +6,12 @@ piece_list = [["-","-","-","-","-","-","-"],
               ["-","-","-","-","-","-","-"],
               ["-","-","-","-","-","-","-"]]
 
-print(piece_list)
+grid_width = 7
+grid_height = 6
 
-def display_game(grid_width, grid_height):
+# The function display_game prints the grid with a size determined by grid_width and grid_height
+# Inside the grid, the appropriate value from piece_list is printed
+def display_game():
     c = 65
 
     # First row
@@ -27,5 +30,24 @@ def display_game(grid_width, grid_height):
         print((grid_width*4+4)*"-")
 
 
-display_game(7, 6)
+display_game()
 
+# player_move let's the player put their move in
+# Through player_symbol, the player can select the symbol they are playing with
+# Through column_number, the player selects in which column to play the piece
+def player_move(current_player_symbol, column_number):
+    for a in range(6):
+        if piece_list[a][column_number-1] == "-":
+            piece_list[a][column_number-1] = current_player_symbol
+            if current_player_symbol == "X":
+                current_player_symbol = "O"
+            else: current_player_symbol = "X" 
+            break
+        
+        elif piece_list[grid_height-1][column_number-1] != "-":
+                print("")
+                print("That column is full, choose another one!")
+                print("")
+                break
+    print("It's player ", current_player_symbol, "'s turn")
+    display_game()
