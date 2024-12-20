@@ -39,9 +39,11 @@ def player_move(current_player_symbol, column_number):
     for a in range(6):
         if piece_list[a][column_number-1] == "-":
             piece_list[a][column_number-1] = current_player_symbol
-            if current_player_symbol == "X":
-                current_player_symbol = "O"
-            else: current_player_symbol = "X" 
+            
+            # Currently, this code is not functional. Need to make it work so player doesn't have to input the symbol
+            # if current_player_symbol == "X":
+            #    current_player_symbol = "O"
+            # else: current_player_symbol = "X" 
             break
         
         elif piece_list[grid_height-1][column_number-1] != "-":
@@ -49,5 +51,7 @@ def player_move(current_player_symbol, column_number):
                 print("That column is full, choose another one!")
                 print("")
                 break
-    print("It's player ", current_player_symbol, "'s turn")
+    
+    # This part is also not functional yet. Need to make it work so player doesn't have to input the symbol
+    # print("It's player ", current_player_symbol, "'s turn")
     display_game()
