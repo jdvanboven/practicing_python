@@ -36,22 +36,23 @@ display_game()
 # Through player_symbol, the player can select the symbol they are playing with
 # Through column_number, the player selects in which column to play the piece
 def player_move(current_player_symbol, column_number):
-    for a in range(6):
+    for a in range(grid_height-1, -1, -1):
         if piece_list[a][column_number-1] == "-":
             piece_list[a][column_number-1] = current_player_symbol
-            
+            display_game()
             # Currently, this code is not functional. Need to make it work so player doesn't have to input the symbol
             # if current_player_symbol == "X":
             #    current_player_symbol = "O"
             # else: current_player_symbol = "X" 
             break
+            
         
-        elif piece_list[grid_height-1][column_number-1] != "-":
+        elif piece_list[0][column_number-1] != "-":
+                display_game()
                 print("")
-                print("That column is full, choose another one!")
+                print("Column",column_number,"is full, choose another one!")
                 print("")
                 break
     
     # This part is also not functional yet. Need to make it work so player doesn't have to input the symbol
     # print("It's player ", current_player_symbol, "'s turn")
-    display_game()
