@@ -1,18 +1,15 @@
-# The piece_list keeps track of which pieces have been placed
-piece_list = [["-","-","-","-","-","-","-"],
-              ["-","-","-","-","-","-","-"],
-              ["-","-","-","-","-","-","-"],
-              ["-","-","-","-","-","-","-"],
-              ["-","-","-","-","-","-","-"],
-              ["-","-","-","-","-","-","-"]]
-
+# grid_width and grid_height determine the size of the playing grid.
 grid_width = 7
 grid_height = 6
-turn_number = 1
-current_player_symbol = "X"
+
+
+# piece_list is generated based on grid_width and grid_height
+# It keeps track of which pieces have been placed
+piece_list = [ ["-"]* grid_width for i in range(grid_height) ]
+
 
 # The function display_game prints the grid with a size determined by grid_width and grid_height
-# Inside the grid, the appropriate value from piece_list is printed
+# The function uses piece_list to display the placed pieces in the grid
 def display_game():
     c = 65
 
@@ -31,42 +28,60 @@ def display_game():
         print("| ")
         print((grid_width*4+4)*"-")
 
-
-display_game()
-
-def turn_checker():
-        global turn_number
-        if turn_number % 2 == 0:
-            current_player_symbol = "O"
+# class Counter is used to create a turn counter that keeps track of turn number and current player
+class Counter:
+    def __init__(self):
+        self.turn_number = 1        # The first turn is always 1
+        self.player_symbol = "X"    # Player "X" is always the starting player
+    
+    def __str__(self):
+        return f"It's turn {self.turn_number}. Player {self.player_symbol}, your move!"
+    
+    # change_turn is a method to increase turn number and change player after every turn
+    def change_turn(self):
+        self.turn_number += 1
+        if self.player_symbol == "X":
+            self.player_symbol = "O"
         else: 
-            current_player_symbol = "X"
-        turn_number = turn_number + 1
-        print(turn_number)
-        
+            self.player_symbol = "X"
+
+# We create object turn_counter to hold the turn number and current player
+turn_counter = Counter()
+
+# TO DO: create a function that will check if a player has won
+def check_victory():
+    pass
 
 # player_move let's the player put their move in
 # Through column_number, the player selects in which column to play the piece
+# TO DO: make it so the player only has to type the column number, not the whole function
 def player_move(column_number):
     
-    # This range with negative step size is created so the script runs through piece_list bottom to top
-    for a in range(grid_height-1, -1, -1):
-        if piece_list[a][column_number-1] == "-":
-            turn_checker()
-            piece_list[a][column_number-1] = current_player_symbol
-            display_game()
-            # Currently, this code is not functional. Need to make it work so player doesn't have to input the symbol
-            # if current_player_symbol == "X":
-            #    current_player_symbol = "O"
-            # else: current_player_symbol = "X" 
-            break
+    # First, check if a column_number is given that fits on the board
+    if 1 <= column_number <= grid_width:
+
+    # Then, go backwards through the following range and look for the first empty space in the selected column
+    # I've used a negative step size, since the pieces in a Connect Four board always fall to the bottom
+        for a in range(grid_height-1, -1, -1):
+
+            # If no empty space is found, print a message that the column is full
+            if piece_list[0][column_number-1] != "-":
+                    display_game()
+                    print("Column",column_number,"is full, choose another one!")
+                    break
             
-        
-        elif piece_list[0][column_number-1] != "-":
+            # If an empty space is available, enter the player's symbol in that space, print the grid and change the turn
+            elif piece_list[a][column_number-1] == "-":
+                piece_list[a][column_number-1] = turn_counter.player_symbol
                 display_game()
-                print("")
-                print("Column",column_number,"is full, choose another one!")
-                print("")
+                turn_counter.change_turn()
+                print(turn_counter)
                 break
     
-    # This part is also not functional yet. Need to make it work so player doesn't have to input the symbol
-    # print("It's player ", current_player_symbol, "'s turn")
+    # If a column is chosen that doesn't exist, print this error message
+    else:
+        print("That column doesn't exist. Please choose a column between 1 and 7.")
+
+# at the start of the game, print the grid, turn number and current player symbol
+display_game()
+print(turn_counter)
