@@ -2,9 +2,7 @@
 grid_width = 7
 grid_height = 6
 
-
-# piece_list is generated based on grid_width and grid_height
-# It keeps track of which pieces have been placed
+# piece_list keeps track of which pieces have been placed
 piece_list = [["-"] * grid_width for i in range(grid_height)]
 
 
@@ -46,26 +44,18 @@ class Counter:
         else:
             self.player_symbol = "X"
 
-
 # We create object turn_counter to hold the turn number and current player
 turn_counter = Counter()
 
 
-# TO DO: create a function that will check if a player has won
-def check_victory():
-    pass
-
 
 # player_move let's the player put their move in
-# Through column_number, the player selects in which column to play the piece
-# TO DO: make it so the player only has to type the column number, not the whole function
 def player_move(column_number):
 
     # First, check if a column_number is given that fits on the board
     if 1 <= column_number <= grid_width:
 
         # Then, go backwards through the following range and look for the first empty space in the selected column
-        # I've used a negative step size, since the pieces in a Connect Four board always fall to the bottom
         for a in range(grid_height - 1, -1, -1):
 
             # If no empty space is found, print a message that the column is full
@@ -86,8 +76,6 @@ def player_move(column_number):
     else:
         print("That column doesn't exist. Please choose a column between 1 and 7.")
 
-
-# at the start of the game, print the grid, turn number and current player symbol
 game_finished = False
 
 while game_finished == False:
@@ -97,3 +85,6 @@ while game_finished == False:
     # Here a break definition should be added, stopping the game when there's a winner, or no more spaces are left.
     # for example:
     # game_finished = check_victory()
+
+def check_vertical_victory():
+    pass
