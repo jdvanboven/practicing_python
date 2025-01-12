@@ -47,7 +47,19 @@ class Counter:
 # We create object turn_counter to hold the turn number and current player
 turn_counter = Counter()
 
+class grid_coordinate:
+    def __init__(self, row, column):
+        self.row = row
+        self.column = column
 
+    def __str__(self):
+        return f"Row {self.row}, column {self.column}"
+    
+    def update_coordinate(self, row, column):
+        self.row = row
+        self. column = column
+
+last_grid_coordinate = grid_coordinate(0, 0)
 
 # player_move let's the player put their move in
 def player_move(column_number):
@@ -60,21 +72,34 @@ def player_move(column_number):
 
             # If no empty space is found, print a message that the column is full
             if piece_list[0][column_number - 1] != "-":
-                display_game()
                 print("Column", column_number, "is full, choose another one!")
                 break
 
             # If an empty space is available, enter the player's symbol in that space, print the grid and change the turn
             elif piece_list[a][column_number - 1] == "-":
                 piece_list[a][column_number - 1] = turn_counter.player_symbol
-                display_game()
+                last_grid_coordinate.update_coordinate(a,column_number - 1)
+                print(last_grid_coordinate)
                 turn_counter.change_turn()
-                print(turn_counter)
                 break
 
     # If a column is chosen that doesn't exist, print this error message
     else:
         print("That column doesn't exist. Please choose a column between 1 and 7.")
+
+# The turn changes before this condition can be checked. Need to fix
+def check_vertical_victory():
+    a = 0
+    for b in range(last_grid_coordinate.row, last_grid_coordinate.row + 4):
+        if piece_list[b][last_grid_coordinate.column] == turn_counter.player_symbol:
+            a +=1
+        else:
+            break
+    
+    if a == 4:
+        return True
+    else:
+        return False
 
 game_finished = False
 
@@ -82,9 +107,8 @@ while game_finished == False:
     display_game()
     print(turn_counter)
     player_move(int(input("Column number: ")))
+    print(check_vertical_victory())
     # Here a break definition should be added, stopping the game when there's a winner, or no more spaces are left.
     # for example:
     # game_finished = check_victory()
 
-def check_vertical_victory():
-    pass
