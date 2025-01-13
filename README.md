@@ -4,5 +4,4 @@ You can start the game with the following command:
 
 python -i connect-four-game.py
 
-Using the function 'player_move', you can chose the column you want to put your piece in:
-player_move(column_number)
+The game will ask you for a column number. To make a move, type the number of the column you want to play your piece in and press enter. Take turns with the other player (or yourself :) ) and enjoy the game!
