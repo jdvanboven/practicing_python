@@ -47,19 +47,21 @@ class Counter:
 # We create object turn_counter to hold the turn number and current player
 turn_counter = Counter()
 
-class grid_coordinate:
-    def __init__(self, row, column):
+class move_details:
+    def __init__(self, row, column, symbol):
         self.row = row
         self.column = column
+        self.symbol = symbol
 
     def __str__(self):
-        return f"Row {self.row}, column {self.column}"
+        return f"Row {self.row}, column {self.column}, symbol {self.symbol}"
     
-    def update_coordinate(self, row, column):
+    def update_move_details(self, row, column, symbol):
         self.row = row
-        self. column = column
+        self.column = column
+        self.symbol = symbol
 
-last_grid_coordinate = grid_coordinate(0, 0)
+last_move = move_details(0, 0, "X")
 
 # player_move let's the player put their move in
 def player_move(column_number):
@@ -78,20 +80,20 @@ def player_move(column_number):
             # If an empty space is available, enter the player's symbol in that space, print the grid and change the turn
             elif piece_list[a][column_number - 1] == "-":
                 piece_list[a][column_number - 1] = turn_counter.player_symbol
-                last_grid_coordinate.update_coordinate(a,column_number - 1)
-                print(last_grid_coordinate)
+                last_move.update_move_details(a, column_number - 1, turn_counter.player_symbol)
+                print(last_move)
                 turn_counter.change_turn()
                 break
 
     # If a column is chosen that doesn't exist, print this error message
     else:
-        print("That column doesn't exist. Please choose a column between 1 and 7.")
+        print("That column doesn't exist. Please choose a column between 1 and 7.")     # TO DO: Make this the 'if', and the loop the 'else'
 
 # The turn changes before this condition can be checked. Need to fix
 def check_vertical_victory():
     a = 0
-    for b in range(last_grid_coordinate.row, last_grid_coordinate.row + 4):
-        if piece_list[b][last_grid_coordinate.column] == turn_counter.player_symbol:
+    for b in range(last_move.row, grid_height):
+        if piece_list[b][last_move.column] == last_move.symbol:
             a +=1
         else:
             break
@@ -100,6 +102,13 @@ def check_vertical_victory():
         return True
     else:
         return False
+
+# TO DO: add methods to check for horizontal and diagonal victories
+def check_horizontal_victory():
+    pass
+
+def check_diagonal_victory():
+    pass
 
 game_finished = False
 
@@ -110,5 +119,10 @@ while game_finished == False:
     print(check_vertical_victory())
     # Here a break definition should be added, stopping the game when there's a winner, or no more spaces are left.
     # for example:
-    # game_finished = check_victory()
+    game_finished = check_vertical_victory()
 
+if game_finished == True:
+    display_game()
+    print(f"Congratulations player {last_move.symbol}! You've won the game.")
+
+# TO DO: Add a way or method to start the game again.
