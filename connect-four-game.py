@@ -47,7 +47,7 @@ class Counter:
 # We create object turn_counter to hold the turn number and current player
 turn_counter = Counter()
 
-class move_details:
+class Move_details:
     def __init__(self, row, column, symbol):
         self.row = row
         self.column = column
@@ -61,7 +61,7 @@ class move_details:
         self.column = column
         self.symbol = symbol
 
-last_move = move_details(0, 0, "X")
+last_move = Move_details(0, 0, "X")
 
 # player_move let's the player put their move in
 def player_move(column_number):
@@ -103,12 +103,44 @@ def check_vertical_victory():
     else:
         return False
 
-# TO DO: add methods to check for horizontal and diagonal victories
+# This now checks the whole row for a horizontal win. It could start from last move but seems more complicated.
 def check_horizontal_victory():
-    pass
+    a = 0
+    for b in range(grid_width):
+        if piece_list[last_move.row][b] == last_move.symbol:
+            a += 1
+            if a == 4:
+                break
+        else:
+            a = 0
+    
+    if a == 4:
+        return True
 
+    else:
+        return False
+    
+# TO DO: Check for diagonal victories
 def check_diagonal_victory():
     pass
+
+def check_victory():
+    if check_vertical_victory() == True or check_horizontal_victory() == True or check_diagonal_victory() == True:
+        return True
+    else:
+        return False
+
+def check_draw():
+    if turn_counter.turn_number >= 43:
+        return True
+    else:
+        return False
+
+def check_game_end():
+    if check_victory() == True or check_draw() == True:
+        return True
+    else:
+        return False
 
 game_finished = False
 
@@ -117,12 +149,16 @@ while game_finished == False:
     print(turn_counter)
     player_move(int(input("Column number: ")))
     print(check_vertical_victory())
-    # Here a break definition should be added, stopping the game when there's a winner, or no more spaces are left.
-    # for example:
-    game_finished = check_vertical_victory()
+    game_finished = check_game_end()
 
+        
 if game_finished == True:
     display_game()
-    print(f"Congratulations player {last_move.symbol}! You've won the game.")
+    if check_victory() == True:
+        print(f"Congratulations player {last_move.symbol}! You've won the game.")
+    elif check_draw() == True:
+        print(f"It's a draw! Well played to both players.")
 
 # TO DO: Add a way or method to start the game again.
+
+
