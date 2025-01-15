@@ -121,7 +121,20 @@ def check_horizontal_victory():
         return False
     
 # TO DO: Check for diagonal victories
+def check_diagonal_victory_bottomleft_topright():
+    a = 0
+    b = last_move.row + 1
+    for c in range(last_move.column + 1, grid_width):
+        if piece_list[b][c] == last_move.symbol:
+            a += 1
+            b += 1
+    pass
+
+def check_diagonal_victory_topleft_bottomright():
+    pass
+
 def check_diagonal_victory():
+        
     pass
 
 def check_victory():
