@@ -63,7 +63,6 @@ class Move_details:
 
 last_move = Move_details(0, 0, "X")
 
-# player_move let's the player put their move in
 def player_move(column_number):
 
     # First, check if a column_number is given that fits on the board
@@ -89,10 +88,9 @@ def player_move(column_number):
     else:
         print("That column doesn't exist. Please choose a column between 1 and 7.")     # TO DO: Make this the 'if', and the loop the 'else'
 
-# The turn changes before this condition can be checked. Need to fix
 def check_vertical_victory():
     a = 0
-    for b in range(last_move.row, grid_height):
+    for b in range(last_move.row, grid_height - 1):
         if piece_list[b][last_move.column] == last_move.symbol:
             a +=1
         else:
@@ -103,10 +101,9 @@ def check_vertical_victory():
     else:
         return False
 
-# This now checks the whole row for a horizontal win. It could start from last move but seems more complicated.
 def check_horizontal_victory():
     a = 0
-    for b in range(grid_width):
+    for b in range(grid_width - 1):
         if piece_list[last_move.row][b] == last_move.symbol:
             a += 1
             if a == 4:
@@ -123,30 +120,51 @@ def check_horizontal_victory():
 # TO DO: Check for diagonal victories
 def check_diagonal_victory_bottomleft_topright():
     a = 0
-    b = last_move.row + 1
-    for c in range(last_move.column + 1, grid_width):
-        if piece_list[b][c] == last_move.symbol:
-            a += 1
-            b += 1
-        else:
-            break
+    b = last_move.row
+    if last_move.row != 5 and last_move.column != 0:
+        for c in range(last_move.column - 1, -1, -1):
+            if b + 1 <= 5 and piece_list[b + 1][c] == last_move.symbol:
+                a += 1
+                b += 1
+            else:
+                break
     
-    d = last_move.row - 1
-    for e in range(last_move.column - 1, 0, -1):
-        if piece_list[d][e] == last_move.symbol:
-            a += 1
-            d -= 1
-        else:
-            break
+    if last_move.row != 0 and last_move.column != 6:
+        for d in range(last_move.column + 1, grid_width, 1):
+            if b - 1 >= 0 and piece_list[b - 1][d] == last_move.symbol:
+                a += 1
+                b -= 1
+            else:
+                break
+
     if a >= 3:
         return True
 
 def check_diagonal_victory_topleft_bottomright():
-    pass
+    a = 0
+    b = last_move.row
+    if last_move.row != 0 and last_move.column != 0:
+        for c in range(last_move.column -1, -1, -1):
+            if b - 1 >= 0 and piece_list[b - 1][c] == last_move.symbol:
+                a += 1
+                b -= 1
+            else:
+                break
+    
+    if last_move.row != 5 and last_move.column != 6:
+        for d in range(last_move.column + 1, grid_width, 1):
+            if b + 1 <= 5 and piece_list[b + 1][d] == last_move.symbol:
+                a += 1
+                b += 1
+            else:
+                break
+
+    if a >= 3:
+        return True
 
 def check_diagonal_victory():
-        
-    pass
+    if check_diagonal_victory_bottomleft_topright() == True or check_diagonal_victory_topleft_bottomright() == True:
+        return True
 
 def check_victory():
     if check_vertical_victory() == True or check_horizontal_victory() == True or check_diagonal_victory() == True:
@@ -172,7 +190,7 @@ while game_finished == False:
     display_game()
     print(turn_counter)
     player_move(int(input("Column number: ")))
-    print(check_vertical_victory())
+    print(check_victory())
     game_finished = check_game_end()
 
         
