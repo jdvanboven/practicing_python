@@ -128,7 +128,18 @@ def check_diagonal_victory_bottomleft_topright():
         if piece_list[b][c] == last_move.symbol:
             a += 1
             b += 1
-    pass
+        else:
+            break
+    
+    d = last_move.row - 1
+    for e in range(last_move.column - 1, 0, -1):
+        if piece_list[d][e] == last_move.symbol:
+            a += 1
+            d -= 1
+        else:
+            break
+    if a >= 3:
+        return True
 
 def check_diagonal_victory_topleft_bottomright():
     pass
