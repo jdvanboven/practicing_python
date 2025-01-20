@@ -1,7 +1,19 @@
-grid_width = 7
-grid_height = 6
+class Dimensions:
+    def __init__(self):
+        self.width = 7
+        self.height = 6
 
-piece_list = [["-"] * grid_width for i in range(grid_height)]
+    def __str__(self):
+        return f"The game grid is {self.width} columns wide and {self.height} rows high"
+
+    # change_turn is a method to increase turn number and change player after every turn
+
+gamegrid = Dimensions()
+
+gamegrid.width = 7
+gamegrid.height = 6
+
+piece_list = [["-"] * gamegrid.width for i in range(gamegrid.height)]
 
 def display_game():
     c = 65
@@ -9,18 +21,18 @@ def display_game():
     # First row
     print("")
     print(f"  ", end="")
-    for j in range(grid_width):
+    for j in range(gamegrid.width):
         print(f"| {j+1} ", end="")
     print("| ")
-    print((grid_width * 4 + 4) * "-")
+    print((gamegrid.width * 4 + 4) * "-")
 
     # Other rows
-    for i in range(grid_height):
+    for i in range(gamegrid.height):
         print(f"{chr(c+i)} ", end="")
-        for j in range(grid_width):
+        for j in range(gamegrid.width):
             print(f"| {piece_list[i][j]} ", end="")
         print("| ")
-        print((grid_width * 4 + 4) * "-")
+        print((gamegrid.width * 4 + 4) * "-")
 
 class Counter:
     def __init__(self):
@@ -58,31 +70,28 @@ last_move = Move_details(0, 0, "X")
 
 def player_move(column_number):
 
-    # First, check if a column_number is given that fits on the board
-    if 1 <= column_number <= grid_width:
+    if 1 <= column_number <= gamegrid.width:
 
-        # Then, go backwards through the following range and look for the first empty space in the selected column
-        for a in range(grid_height - 1, -1, -1):
+        for a in range(gamegrid.height - 1, -1, -1):
 
-            # If no empty space is found, print a message that the column is full
             if piece_list[0][column_number - 1] != "-":
                 print("Column", column_number, "is full, choose another one!")
                 break
 
-            # If an empty space is available, enter the player's symbol in that space, print the grid and change the turn
             elif piece_list[a][column_number - 1] == "-":
                 piece_list[a][column_number - 1] = turn_counter.player_symbol
                 last_move.update_move_details(a, column_number - 1, turn_counter.player_symbol)
                 turn_counter.change_turn()
                 break
 
-    # If a column is chosen that doesn't exist, print this error message
+# TO DO: Make this the 'if', and the loop the 'else'
     else:
-        print("That column doesn't exist. Please choose a column between 1 and 7.")     # TO DO: Make this the 'if', and the loop the 'else'
+        print("That column doesn't exist. Please choose a column between 1 and 7.")     
 
+# Victory checks are not completely optimised for different size grids. This needs to be updated.
 def check_vertical_victory():
     a = 0
-    for b in range(last_move.row, grid_height):
+    for b in range(last_move.row, gamegrid.height):
         if piece_list[b][last_move.column] == last_move.symbol:
             a +=1
         else:
@@ -95,7 +104,7 @@ def check_vertical_victory():
 
 def check_horizontal_victory():
     a = 0
-    for b in range(grid_width - 1):
+    for b in range(gamegrid.width - 1):
         if piece_list[last_move.row][b] == last_move.symbol:
             a += 1
             if a == 4:
@@ -125,7 +134,7 @@ def check_diagonal_victory_topright():
     a = 0
     b = last_move.row
     if last_move.row != 0 and last_move.column != 6:
-        for d in range(last_move.column + 1, grid_width, 1):
+        for d in range(last_move.column + 1, gamegrid.width, 1):
             if b - 1 >= 0 and piece_list[b - 1][d] == last_move.symbol:
                 a += 1
                 b -= 1
@@ -153,7 +162,7 @@ def check_diagonal_victory_bottomright():
     a = 0
     b = last_move.row
     if last_move.row != 5 and last_move.column != 6:
-            for d in range(last_move.column + 1, grid_width, 1):
+            for d in range(last_move.column + 1, gamegrid.width, 1):
                 if b + 1 <= 5 and piece_list[b + 1][d] == last_move.symbol:
                     a += 1
                     b += 1
@@ -187,6 +196,9 @@ def check_game_end():
     else:
         return False
 
+def restart_game(bool):
+    pass
+
 game_finished = False
 
 while game_finished == False:
@@ -202,6 +214,9 @@ if game_finished == True:
         print(f"Congratulations player {last_move.symbol}! You've won the game in {turn_counter.number - 1} turns.")
     elif check_draw() == True:
         print(f"It's a draw! Well played to both players.")
+    restart_game(bool(input("Want to play again? True/False: ")))
+
+
 
 
 # TO DO: Add a way or method to start the game again.
