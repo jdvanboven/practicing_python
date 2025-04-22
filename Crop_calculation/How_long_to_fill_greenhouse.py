@@ -4,6 +4,7 @@ It needs to know how long a crop takes to mature, how many products it produces 
 It assumes the products are put into a seed maker and that the seed maker produces X seeds on average.
 '''
 
+TOTAL_SPACES = 100
 
 class Plant:
     def __init__(self)
@@ -12,16 +13,21 @@ class Plant:
     def increase_age(self)
         self.age += 7
 
-def age_plants():
-    pass
+def age_plants(plant_list):
+    for plant in plant_list
+        plant.increase_age()
 
-def plant_new_seeds():
+def generate_new_plants():
     pass
 
 def main()
+    p1 = Plant()
+    plant_list = []
+    plant_list.append(p1)
+    greenhouse_full = False
     while greenhouse_full == False:
-        age_plants()
-        plant_new_seeds()
+        age_plants(plant_list)
+        plant_new_seeds(plant_list)
 
 
 if __name__ == "__main__":
