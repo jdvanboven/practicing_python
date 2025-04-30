@@ -1,10 +1,10 @@
 {
     "crops":{
-        "cranberry":{
+        "Cranberry":{
             "maturity_age": 7,
             "fruit_interval": 5
         },
-        "ancient_fruit":{
+        "Ancient_fruit":{
             "maturity_age": 28,
             "fruit_interval": 7
         }
