@@ -5,6 +5,8 @@ It assumes the products are put into a seed maker and that the seed maker produc
 '''
 
 import math
+from tkinter import *
+from tkinter import ttk
 
 TOTAL_SPACES = 100
 STARTING_SEEDS = 1
@@ -56,5 +58,36 @@ def simulate_greenhouse(starting_seeds, greenhouse_spaces, maturity_age, fruit_i
 def main():
     simulate_greenhouse(STARTING_SEEDS, TOTAL_SPACES, MATURITY_AGE, FRUIT_INTERVAL)
 
-if __name__ == "__main__":
-    main()
+root = Tk()
+root.title("Greenhouse calculator")
+
+main_window = ttk.Frame(root, padding="3 3 12 12")
+main_window.grid(column=0, row=0, sticky=(N, W, E, S))
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+crop = StringVar()
+crop_entry = ttk.Entry(main_window, width=10, textvariable=crop)
+crop_entry.grid(column=2, row=1, sticky=(W, E))
+ttk.Label(main_window, text="Crop").grid(column=3, row=1, sticky=W)
+
+available_spaces = StringVar()
+available_spaces_entry = ttk.Entry(main_window, width=7, textvariable=available_spaces)
+available_spaces_entry.grid(column=2, row=2, sticky=(W, E))
+ttk.Label(main_window, text="Available spaces").grid(column=3, row=2, sticky=W)
+
+starting_seeds = StringVar()
+starting_seeds_entry = ttk.Entry(main_window, width=7, textvariable=starting_seeds)
+starting_seeds_entry.grid(column=2, row=3, sticky=(W, E))
+ttk.Label(main_window, text="# of starting seeds").grid(column=3, row=3, sticky=W)
+
+ttk.Button(main_window, text="Calculate", command=main).grid(column=3, row=5, sticky=W)
+
+ttk.Label(main_window, text="Greenhouse is filled in").grid(column=1, row=7, sticky=W)
+ttk.Label(main_window, text="days").grid(column=3, row=7, sticky=W)
+
+ttk.Label(main_window, text="All plants mature in").grid(column=1, row=8, sticky=W)
+ttk.Label(main_window, text="days").grid(column=3, row=8, sticky=W)
+
+
+root.mainloop()
