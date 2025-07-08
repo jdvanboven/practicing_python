@@ -39,8 +39,7 @@ class Grid_cell:
             self.color = "gray"
 
 first_cell = Grid_cell()
-
-board = [[Grid_cell() for _ in range(grid_size[0])] for _ in range(grid_size[1])]
+board = [[Grid_cell() for _ in range(grid_height)] for _ in range(grid_width)]
 
 while running:
     for event in pygame.event.get():
@@ -62,8 +61,9 @@ while running:
     
     for iy, rowOfCells in enumerate(board):
         for ix, cell in enumerate(rowOfCells):
+            print(ix, iy)
             current_cell = board[ix][iy]
-            print(current_cell)
+            
             pygame.draw.rect(grid_surface, current_cell.color, (ix*current_cell.w+1, iy*current_cell.h+1, 18, 18))
 
     pygame.display.flip()
