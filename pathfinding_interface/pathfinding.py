@@ -2,7 +2,7 @@ import pygame
 import random
 
 pygame.init()
-grid_surface = pygame.display.set_mode(size=(500,500), flags=pygame.RESIZABLE)
+grid_surface = pygame.display.set_mode(size=(550,450), flags=pygame.RESIZABLE)
 clock = pygame.time.Clock()
 running = True
 base_color = (200, 0, 0)
@@ -12,15 +12,16 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
+grid_surface.fill("black")
+
 class Grid_cell:
-    def __init__(self):
+    def __init__(self, x, y, w, h):
         self.state = "empty"
         self.color = "gray"
-        self.x = 0
-        self.y = 0
-        self.w = cell_width
-        self.h = cell_height
-        self.box = pygame.draw.rect(grid_surface, self.color, (self.x, self.y, self.w, self.h))
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
 
     def __str__(self):
         return "state: {}, color:{}".format(self.state, self.color)
@@ -38,8 +39,12 @@ class Grid_cell:
             self.state = "empty"
             self.color = "gray"
 
-first_cell = Grid_cell()
-board = [[Grid_cell() for _ in range(grid_height)] for _ in range(grid_width)]
+board = []
+for y in range(grid_height):
+    board.append([])
+    for x in range(grid_width):
+        board[y].append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
+
 
 while running:
     for event in pygame.event.get():
@@ -47,25 +52,20 @@ while running:
             running = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            row = event.pos[0] // cell_width
-            col = event.pos[1] // cell_height
-            print(row, col)
-            first_cell.change_cell_state
-            if row <= 1 and col <= 1:
-                first_cell.change_cell_state()
-                print(first_cell)
+            col = event.pos[0] // (cell_width + 1)
+            row = event.pos[1] // (cell_height + 1)
 
-    # grid_surface.fill("black")
+            if col <= (grid_width - 1) and row <= (grid_height -1):
+                current_cell = board[row][col]
+                current_cell.change_cell_state()
 
-    # pygame.draw.rect(grid_surface, first_cell.color, (first_cell.x, first_cell.y, first_cell.w, first_cell.h))
-    
-    for iy, rowOfCells in enumerate(board):
-        for ix, cell in enumerate(rowOfCells):
-            print(ix, iy)
-            current_cell = board[ix][iy]
+                for row in board:
+                    for cell in row:
+                        pygame.draw.rect(grid_surface, cell.color, (cell.x, cell.y, cell.w, cell.h))
+        
+
+
             
-            pygame.draw.rect(grid_surface, current_cell.color, (ix*current_cell.w+1, iy*current_cell.h+1, 18, 18))
-
     pygame.display.flip()
     
     clock.tick(60)
