@@ -12,7 +12,7 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-# grid_surface.fill("black")
+
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -69,11 +69,11 @@ while running:
                 elif event.button == 3:
                     current_cell.change_passable_state()
 
-                for row in board:
-                    for cell in row:
-                        pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
-                        if cell.passable == False:
-                            pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
+    for row in board:
+        for cell in row:
+            pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+            if cell.passable == False:
+                pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
 
             
