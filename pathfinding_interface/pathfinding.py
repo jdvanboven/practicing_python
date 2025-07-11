@@ -12,32 +12,37 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-grid_surface.fill("black")
+# grid_surface.fill("black")
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
-        self.state = "empty"
-        self.color = "gray"
+        self.planted = False
+        self.passable = True
+        self.fill_color = "gray"
+        self.border_color = "red"
         self.x = x
         self.y = y
         self.w = w
         self.h = h
 
     def __str__(self):
-        return "state: {}, color:{}".format(self.state, self.color)
+        return "planted: {}, passable: {}, color: {}".format(self.planted, self.passable, self.fill_color)
 
-    def change_cell_state(self):
-        if self.state == "empty":
-            self.state = "filled"
-            self.color = "green"
-        
-        elif self.state == "filled":
-            self.state = "impassable"
-            self.color = "blue"
+    def change_planted_state(self):
+        if self.planted == False:
+            self.planted = True
+            self.fill_color = "green"
 
-        elif self.state == "impassable":
-            self.state = "empty"
-            self.color = "gray"
+        elif self.planted == True:
+            self.planted = False
+            self.fill_color = "gray"
+    
+    def change_passable_state(self):
+        if self.passable == True:
+            self.passable = False
+
+        elif self.passable == False:
+            self.passable = True       
 
 board = []
 for y in range(grid_height):
@@ -54,15 +59,21 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             col = event.pos[0] // (cell_width + 1)
             row = event.pos[1] // (cell_height + 1)
-
+            
             if col <= (grid_width - 1) and row <= (grid_height -1):
                 current_cell = board[row][col]
-                current_cell.change_cell_state()
+                
+                if event.button == 1:
+                    current_cell.change_planted_state()
+
+                elif event.button == 3:
+                    current_cell.change_passable_state()
 
                 for row in board:
                     for cell in row:
-                        pygame.draw.rect(grid_surface, cell.color, (cell.x, cell.y, cell.w, cell.h))
-        
+                        pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+                        if cell.passable == False:
+                            pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
 
             
