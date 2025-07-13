@@ -1,6 +1,7 @@
 import pygame
 import random
 import itertools
+import numpy as np
 
 pygame.init()
 grid_surface = pygame.display.set_mode(size=(750,450), flags=pygame.RESIZABLE)
@@ -45,11 +46,26 @@ class Grid_cell:
         elif self.passable == False:
             self.passable = True       
 
+def calculate_distance_between_cells(cell_1, cell_2):
+    a = cell_1.x_coord - cell_2.x_coord
+    b = cell_1.y_coord - cell_2.y_coord
+    distance = np.sqrt(a**2 + b**2)
+    return distance
+
+def generate_distance_matrix(cells_list):
+    distance_matrix = []
+
+
 board = []
 for y in range(grid_height):
     board.append([])
     for x in range(grid_width):
         board[y].append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
+
+# board = []
+# for y in range(grid_height):
+#     for x in range(grid_width):
+#         board.append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
 
 calc_button = Grid_cell(601, 101, 100, 50)
 print(calc_button.x_coord, calc_button.y_coord)
