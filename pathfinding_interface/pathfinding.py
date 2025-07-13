@@ -52,20 +52,35 @@ def calculate_distance_between_cells(cell_1, cell_2):
     distance = np.sqrt(a**2 + b**2)
     return distance
 
+# test_list = []
+# for x in range(0, 250, 50):
+#     print(x)
+#     test_list.append(Grid_cell(x, x, 10, 10))
+
 def generate_distance_matrix(cells_list):
     distance_matrix = []
+    for _ in range(len(cells_list)):
+        distance_matrix.append([])
+    
+    for index_1 in range(len(cells_list)):
+        for index_2 in range(index_1, len(cells_list)):
+            distance = calculate_distance_between_cells(cells_list[index_1], cells_list[index_2])
+            distance_matrix[index_1].append(distance)
+            if index_1 is not index_2:
+                distance_matrix[index_2].append(distance)
+    return distance_matrix
 
+# Old code to generate board. Newer code is preferred because the list is 1-dimensional
+# board = []
+# for y in range(grid_height):
+#     board.append([])
+#     for x in range(grid_width):
+#         board[y].append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
 
 board = []
 for y in range(grid_height):
-    board.append([])
     for x in range(grid_width):
-        board[y].append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
-
-# board = []
-# for y in range(grid_height):
-#     for x in range(grid_width):
-#         board.append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
+        board.append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
 
 calc_button = Grid_cell(601, 101, 100, 50)
 print(calc_button.x_coord, calc_button.y_coord)
@@ -81,7 +96,10 @@ while running:
             print(col, row)
             
             if col <= (grid_width - 1) and row <= (grid_height - 1):
-                current_cell = board[row][col]
+                for cell in board:
+                    if cell.x_coord == col and cell.y_coord == row:
+                        current_cell = cell
+                        break
 
                 if event.button == 1:
                     current_cell.change_planted_state()
@@ -92,11 +110,10 @@ while running:
             if (col == calc_button.x_coord + 1 or col == calc_button.x_coord + 2) and row == (calc_button.y_coord + 1):
                 print("button pressed")
 
-    for row in board:
-        for cell in row:
-            pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
-            if cell.passable == False:
-                pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
+    for cell in board:
+        pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+        if cell.passable == False:
+            pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
     pygame.draw.rect(grid_surface, "white", (calc_button.x, calc_button.y, calc_button.w, calc_button.h))
             
