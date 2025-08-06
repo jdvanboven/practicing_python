@@ -2,6 +2,7 @@ import pygame
 import random
 from itertools import permutations
 import numpy as np
+import math
 
 pygame.init()
 grid_surface = pygame.display.set_mode(size=(750,450), flags=pygame.RESIZABLE)
@@ -15,7 +16,7 @@ cell_width = 50
 cell_height = 50
 
 # population_size should be smaller than the amount of permutations. Not too large, because that requires a lot of calculation.
-population_size = 6
+population_size = 10
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -49,47 +50,57 @@ class Grid_cell:
         elif self.passable == False:
             self.passable = True       
 
-def calculate_distance_between_cells(cell_1, cell_2):
-    a = cell_1.x_coord - cell_2.x_coord
-    b = cell_1.y_coord - cell_2.y_coord
-    distance = np.sqrt(a**2 + b**2)
-    return distance
 
 # test_list = []
 # for x in range(0, 250, 50):
 #     print(x)
 #     test_list.append(Grid_cell(x, x, 10, 10))
 
-def generate_distance_matrix(cells_list):
-    distance_matrix = []
-    for _ in range(len(cells_list)):
-        distance_matrix.append([])
+# OBSOLETE:
+# def generate_distance_matrix(cells_list):
+#     distance_matrix = []
+#     for _ in range(len(cells_list)):
+#         distance_matrix.append([])
     
-    for index_1 in range(len(cells_list)):
-        for index_2 in range(index_1, len(cells_list)):
-            distance = calculate_distance_between_cells(cells_list[index_1], cells_list[index_2])
-            distance_matrix[index_1].append(distance)
-            if index_1 is not index_2:
-                distance_matrix[index_2].append(distance)
-    return distance_matrix
+#     for index_1 in range(len(cells_list)):
+#         for index_2 in range(index_1, len(cells_list)):
+#             distance = calculate_distance_between_cells(cells_list[index_1], cells_list[index_2])
+#             distance_matrix[index_1].append(distance)
+#             if index_1 is not index_2:
+#                 distance_matrix[index_2].append(distance)
+#     return distance_matrix
 
 def generate_initial_population(locations_list, population_size):
     population_permutations = []
     possible_permutations = list(permutations(locations_list))
-    print(possible_permutations)
-    print(len(possible_permutations))
-    random_ids = random.sample(range(0, len(possible_permutations)), population_size)
+    random_ids = random.sample(range(0, len(possible_permutations)), min(population_size, math.factorial(len(locations_list))))
     for i in random_ids:
         population_permutations.append(list(possible_permutations[i]))
 
     return population_permutations
 
-def calculate_individual_distance():
-    pass
+def calculate_distance_between_cells(cell_1, cell_2):
+    a = cell_1.x_coord - cell_2.x_coord
+    b = cell_1.y_coord - cell_2.y_coord
+    distance = np.sqrt(a**2 + b**2)
+    return distance
+
+def calculate_individual_distance(individual):
+    individual_distance = 0
+    for i in range(0, len(individual)):
+        if i == (len(individual) - 1):
+            individual_distance += calculate_distance_between_cells(individual[i], individual[0])
+        else:
+            individual_distance += calculate_distance_between_cells(individual[i], individual[i+1])
+    return individual_distance
 
 def run_genetic_algorithm(locations_list, population_size):
-    population_permutations = generate_initial_population(locations_list, population_size)
-    print(population_permutations)
+    population = generate_initial_population(locations_list, population_size)
+    # print(population)
+    all_distances = []
+    for individual in population:
+        all_distances.append(calculate_individual_distance(individual))
+    print(max(all_distances), min(all_distances))
 
 board = []
 for y in range(grid_height):
