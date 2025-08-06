@@ -1,6 +1,6 @@
 import pygame
 import random
-import itertools
+from itertools import permutations
 import numpy as np
 
 pygame.init()
@@ -13,6 +13,8 @@ grid_width = 11
 grid_height = 9
 cell_width = 50
 cell_height = 50
+
+population_size = 6
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -70,12 +72,23 @@ def generate_distance_matrix(cells_list):
                 distance_matrix[index_2].append(distance)
     return distance_matrix
 
-# Old code to generate board. Newer code is preferred because the list is 1-dimensional
-# board = []
-# for y in range(grid_height):
-#     board.append([])
-#     for x in range(grid_width):
-#         board[y].append(Grid_cell(x*(cell_width + 1), y*(cell_height + 1), cell_width, cell_height))
+def generate_initial_population(locations_list, population_size):
+    population_permutations = []
+    possible_permutations = list(permutations(locations_list))
+    print(possible_permutations)
+    print(len(possible_permutations))
+    random_ids = random.sample(range(0, len(possible_permutations)), population_size)
+    for i in random_ids:
+        population_permutations.append(list(possible_permutations[i]))
+
+    return population_permutations
+
+def calculate_individual_distance():
+    pass
+
+def run_genetic_algorithm(locations_list, population_size):
+    population_permutations = generate_initial_population(locations_list, population_size)
+    print(population_permutations)
 
 board = []
 for y in range(grid_height):
@@ -108,7 +121,11 @@ while running:
                     current_cell.change_passable_state()
 
             if (col == calc_button.x_coord + 1 or col == calc_button.x_coord + 2) and row == (calc_button.y_coord + 1):
-                print("button pressed")
+                selected_cells_list = []
+                for cell in board:
+                    if cell.planted == True:
+                        selected_cells_list.append(cell)
+                run_genetic_algorithm(selected_cells_list, population_size)
 
     for cell in board:
         pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
