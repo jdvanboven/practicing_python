@@ -14,6 +14,7 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
+# population_size should be smaller than the amount of permutations. Not too large, because that requires a lot of calculation.
 population_size = 6
 
 class Grid_cell:
