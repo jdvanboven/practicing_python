@@ -16,7 +16,7 @@ cell_width = 50
 cell_height = 50
 
 # population_size should be smaller than the amount of permutations. Not too large, because that requires a lot of calculation.
-population_size = 10
+population_size = 20
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -94,13 +94,22 @@ def calculate_individual_distance(individual):
             individual_distance += calculate_distance_between_cells(individual[i], individual[i+1])
     return individual_distance
 
+def calculate_fitness_probabilities(population):
+    total_distance_all_individuals = []
+    for i in range(0, len(population)):
+        total_distance_all_individuals.append(calculate_individual_distance(population[i]))
+    max_population_distance = max(total_distance_all_individuals)
+    population_fitness = max_population_distance - total_distance_all_individuals
+    population_fitness_sum = sum(population_fitness)
+    population_fitness_probabilities = population_fitness / population_fitness_sum
+    return population_fitness_probabilities
+
 def run_genetic_algorithm(locations_list, population_size):
     population = generate_initial_population(locations_list, population_size)
     # print(population)
-    all_distances = []
-    for individual in population:
-        all_distances.append(calculate_individual_distance(individual))
-    print(max(all_distances), min(all_distances))
+    population_fitness_probabilities = calculate_fitness_probabilities(population)
+    print(population_fitness_probabilities)
+    print(sum(population_fitness_probabilities))
 
 board = []
 for y in range(grid_height):
