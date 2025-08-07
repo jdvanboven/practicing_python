@@ -3,6 +3,7 @@ import random
 from itertools import permutations
 import numpy as np
 import math
+from statistics import mode
 
 pygame.init()
 grid_surface = pygame.display.set_mode(size=(750,450), flags=pygame.RESIZABLE)
@@ -104,12 +105,24 @@ def calculate_fitness_probabilities(population):
     population_fitness_probabilities = population_fitness / population_fitness_sum
     return population_fitness_probabilities
 
+def perform_random_selection(population, population_fitness_probabilities):
+    population_fitness_probabilities_cumsum = population_fitness_probabilities.cumsum()
+    randomly_selected_number = np.random.uniform(0,1,1)
+    bool_probabilities_array = population_fitness_probabilities_cumsum < randomly_selected_number
+    # The line below has a '- 1' at the end in the instructions. This seemed to select the wrong individual, so I removed it. Noting it here so I don't forget.
+    selected_individual_index = len(bool_probabilities_array[bool_probabilities_array == True])
+    # print(population_fitness_probabilities_cumsum)
+    # print(randomly_selected_number)
+    # print(bool_probabilities_array)
+    # print(selected_individual_index)
+    return population[selected_individual_index]
+
 def run_genetic_algorithm(locations_list, population_size):
     population = generate_initial_population(locations_list, population_size)
     # print(population)
     population_fitness_probabilities = calculate_fitness_probabilities(population)
     print(population_fitness_probabilities)
-    print(sum(population_fitness_probabilities))
+
 
 board = []
 for y in range(grid_height):
