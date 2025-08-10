@@ -17,7 +17,7 @@ cell_width = 50
 cell_height = 50
 
 # population_size should be smaller than the amount of permutations. Not too large, because that requires a lot of calculation.
-population_size = 20
+population_size = 50
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -71,12 +71,19 @@ class Grid_cell:
 #                 distance_matrix[index_2].append(distance)
 #     return distance_matrix
 
-def generate_initial_population(locations_list, population_size):
+def generate_initial_population_old(locations_list, population_size):
     population_permutations = []
     possible_permutations = list(permutations(locations_list))
     random_ids = random.sample(range(0, len(possible_permutations)), min(population_size, math.factorial(len(locations_list))))
     for i in random_ids:
         population_permutations.append(list(possible_permutations[i]))
+
+    return population_permutations
+
+def generate_initial_population(locations_list, population_size):
+    population_permutations = []
+    for i in range(0, population_size):
+        population_permutations.append(random.sample(locations_list, len(locations_list)))
 
     return population_permutations
 
@@ -114,14 +121,20 @@ def perform_random_selection(population, population_fitness_probabilities):
     # print(population_fitness_probabilities_cumsum)
     # print(randomly_selected_number)
     # print(bool_probabilities_array)
-    # print(selected_individual_index)
+    print(selected_individual_index)
     return population[selected_individual_index]
 
+def crossover_parents(parent_1, parent_2):
+    n_cities_cut = len(parent_1 - 1)
+    pass
+
 def run_genetic_algorithm(locations_list, population_size):
+    # population = generate_initial_population(locations_list, population_size)
     population = generate_initial_population(locations_list, population_size)
     # print(population)
     population_fitness_probabilities = calculate_fitness_probabilities(population)
     print(population_fitness_probabilities)
+
 
 
 board = []
