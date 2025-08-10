@@ -125,8 +125,29 @@ def perform_random_selection(population, population_fitness_probabilities):
     return population[selected_individual_index]
 
 def crossover_parents(parent_1, parent_2):
-    n_cities_cut = len(parent_1 - 1)
-    pass
+    n_cities_cut = len(parent_1) - 1
+    cut = round(random.uniform(1, n_cities_cut))
+    offspring_1 = []
+    offspring_2 = []
+
+    offspring_1 = parent_1[0:cut]
+    offspring_1 += [city for city in parent_2 if city not in offspring_1]
+
+    offspring_2 = parent_2[0:cut]
+    offspring_2 += [city for city in parent_1 if city not in offspring_2]
+
+    return offspring_1, offspring_2
+
+def mutate_offspring(offspring):
+    n_cities_cut = len(offspring) - 1
+    index_1 = round(random.uniform(1, n_cities_cut))
+    index_2 = round(random.uniform(1, n_cities_cut))
+
+    temp = offspring[index_1]
+    offspring[index_1] = offspring[index_2]
+    offspring[index_2] = temp
+
+    return offspring
 
 def run_genetic_algorithm(locations_list, population_size):
     # population = generate_initial_population(locations_list, population_size)
