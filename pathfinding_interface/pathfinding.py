@@ -16,8 +16,10 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-# population_size should be smaller than the amount of permutations. Not too large, because that requires a lot of calculation.
-population_size = 50
+population_size = 100
+number_of_generations = 100
+crossover_rate = 0.8
+mutation_rate = 0.2
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -51,25 +53,6 @@ class Grid_cell:
         elif self.passable == False:
             self.passable = True       
 
-
-# test_list = []
-# for x in range(0, 250, 50):
-#     print(x)
-#     test_list.append(Grid_cell(x, x, 10, 10))
-
-# OBSOLETE:
-# def generate_distance_matrix(cells_list):
-#     distance_matrix = []
-#     for _ in range(len(cells_list)):
-#         distance_matrix.append([])
-    
-#     for index_1 in range(len(cells_list)):
-#         for index_2 in range(index_1, len(cells_list)):
-#             distance = calculate_distance_between_cells(cells_list[index_1], cells_list[index_2])
-#             distance_matrix[index_1].append(distance)
-#             if index_1 is not index_2:
-#                 distance_matrix[index_2].append(distance)
-#     return distance_matrix
 
 def generate_initial_population_old(locations_list, population_size):
     population_permutations = []
@@ -138,7 +121,7 @@ def crossover_parents(parent_1, parent_2):
 
     return offspring_1, offspring_2
 
-def mutate_offspring(offspring):
+def generate_mutations(offspring):
     n_cities_cut = len(offspring) - 1
     index_1 = round(random.uniform(1, n_cities_cut))
     index_2 = round(random.uniform(1, n_cities_cut))
@@ -149,12 +132,18 @@ def mutate_offspring(offspring):
 
     return offspring
 
+def generate_offspring(population, population_fitness_probabilities, population_size, crossover_rate, mutation_rate):
+    parents_list = []
+    for i in range(0, int(crossover_rate * population_size)):
+        parents_list.append(perform_random_selection(population, population_fitness_probabilities))
+
 def run_genetic_algorithm(locations_list, population_size):
     # population = generate_initial_population(locations_list, population_size)
     population = generate_initial_population(locations_list, population_size)
     # print(population)
     population_fitness_probabilities = calculate_fitness_probabilities(population)
-    print(population_fitness_probabilities)
+    # print(population_fitness_probabilities)
+
 
 
 
