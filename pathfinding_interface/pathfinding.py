@@ -195,6 +195,7 @@ def run_genetic_algorithm(locations_list, population_size):
     minimum_distance = min(total_dist_all_individuals)
     print(minimum_distance)
     shortest_path = population[index_minimum]
+    return shortest_path
         
 board = []
 for y in range(grid_height):
@@ -231,7 +232,10 @@ while running:
                 for cell in board:
                     if cell.planted == True:
                         selected_cells_list.append(cell)
-                run_genetic_algorithm(selected_cells_list, population_size)
+                shortest_path = run_genetic_algorithm(selected_cells_list, population_size)
+
+    # if 'shortest_path' in locals():
+    #     print(shortest_path)
 
     for cell in board:
         pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
@@ -239,6 +243,8 @@ while running:
             pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
     pygame.draw.rect(grid_surface, "white", (calc_button.x, calc_button.y, calc_button.w, calc_button.h))
+    # for cell in shortest_path:
+    #     pygame.draw.line(grid_surface, "red", ((cell.x + cell.w /2), cell.y + cell.h / 2), (20, 20) , 3)
             
     pygame.display.flip()
     
