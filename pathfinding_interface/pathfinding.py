@@ -136,6 +136,27 @@ def generate_offspring(population, population_fitness_probabilities, population_
     parents_list = []
     for i in range(0, int(crossover_rate * population_size)):
         parents_list.append(perform_random_selection(population, population_fitness_probabilities))
+    print(calculate_individual_distance(parents_list[0]))
+
+    offspring_list = []
+    for i in range(0, len(parents_list), 2):
+        offspring_1, offspring_2 = crossover_parents(parents_list[i], parents_list[i+1])
+
+        mutate_threshold = random.random()
+        if mutate_threshold > (1 - mutation_rate):
+            offspring_1 = generate_mutations(offspring_1)
+
+        mutate_threshold = random.random()
+        if mutate_threshold > (1 - mutation_rate):
+            offspring_2 = generate_mutations(offspring_2)
+
+        offspring_list.append(offspring_1)
+        offspring_list.append(offspring_2)
+
+    print(calculate_individual_distance(offspring_list[1]))
+    mixed_offspring = parents_list + offspring_list
+
+    return mixed_offspring    
 
 def run_genetic_algorithm(locations_list, population_size):
     # population = generate_initial_population(locations_list, population_size)
@@ -143,7 +164,8 @@ def run_genetic_algorithm(locations_list, population_size):
     # print(population)
     population_fitness_probabilities = calculate_fitness_probabilities(population)
     # print(population_fitness_probabilities)
-
+    mixed_offspring = generate_offspring(population, population_fitness_probabilities, population_size, crossover_rate, mutation_rate)
+    
 
 
 
