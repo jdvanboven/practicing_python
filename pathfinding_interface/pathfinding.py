@@ -16,10 +16,10 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-population_size = 100
-number_of_generations = 100
-crossover_rate = 0.8
-mutation_rate = 0.2
+population_size = 200
+number_of_generations = 200
+crossover_rate = 0.7
+mutation_rate = 0.7
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -101,10 +101,6 @@ def perform_random_selection(population, population_fitness_probabilities):
     bool_probabilities_array = population_fitness_probabilities_cumsum < randomly_selected_number
     # The line below has a '- 1' at the end in the instructions. This seemed to select the wrong individual, so I removed it. Noting it here so I don't forget.
     selected_individual_index = len(bool_probabilities_array[bool_probabilities_array == True])
-    # print(population_fitness_probabilities_cumsum)
-    # print(randomly_selected_number)
-    # print(bool_probabilities_array)
-    print(selected_individual_index)
     return population[selected_individual_index]
 
 def crossover_parents(parent_1, parent_2):
@@ -136,7 +132,6 @@ def generate_offspring(population, population_fitness_probabilities, population_
     parents_list = []
     for i in range(0, int(crossover_rate * population_size)):
         parents_list.append(perform_random_selection(population, population_fitness_probabilities))
-    print(calculate_individual_distance(parents_list[0]))
 
     offspring_list = []
     for i in range(0, len(parents_list), 2):
@@ -153,22 +148,54 @@ def generate_offspring(population, population_fitness_probabilities, population_
         offspring_list.append(offspring_1)
         offspring_list.append(offspring_2)
 
-    print(calculate_individual_distance(offspring_list[1]))
     mixed_offspring = parents_list + offspring_list
 
     return mixed_offspring    
 
+def perform_replacement(mixed_offspring, crossover_rate, population_size, population):
+    fitness_probabilities = calculate_fitness_probabilities(mixed_offspring)
+    sorted_fitness_indices = np.argsort(fitness_probabilities)[::-1]
+    best_fitness_indices = sorted_fitness_indices[0:int(crossover_rate * population_size)]
+
+    best_mixed_offspring = []
+    for i in best_fitness_indices:
+        best_mixed_offspring.append(mixed_offspring[i])
+
+    old_population_indices = []
+    for i in range(int((1 - crossover_rate) * population_size)):
+        old_population_indices.append(random.randint(0, (len(population) - 1)))
+
+    for i in old_population_indices:
+        best_mixed_offspring.append(population[i])
+
+    random.shuffle(best_mixed_offspring)
+    return best_mixed_offspring
+
 def run_genetic_algorithm(locations_list, population_size):
     # population = generate_initial_population(locations_list, population_size)
     population = generate_initial_population(locations_list, population_size)
-    # print(population)
-    population_fitness_probabilities = calculate_fitness_probabilities(population)
-    # print(population_fitness_probabilities)
-    mixed_offspring = generate_offspring(population, population_fitness_probabilities, population_size, crossover_rate, mutation_rate)
     
+    for generation in range(1, number_of_generations + 1):
+        if generation % 20 == 0:
+            print(f'generation = {generation}')
+            total_dist_all_individuals = []
+            for i in range(0, len(population)):
+                total_dist_all_individuals.append(calculate_individual_distance(population[i]))
+            minimum_distance = min(total_dist_all_individuals)
+            print(minimum_distance)
 
+        population_fitness_probabilities = calculate_fitness_probabilities(population)
+        mixed_offspring = generate_offspring(population, population_fitness_probabilities, population_size, crossover_rate, mutation_rate)
+        population = perform_replacement(mixed_offspring, crossover_rate, population_size, population)
 
-
+    total_dist_all_individuals = []
+    for i in range(0, len(population)):
+        total_dist_all_individuals.append(calculate_individual_distance(population[i]))
+    index_minimum = np.argmin(total_dist_all_individuals)
+    minimum_distance = min(total_dist_all_individuals)
+    print(minimum_distance)
+    shortest_path = population[index_minimum]
+        
 board = []
 for y in range(grid_height):
     for x in range(grid_width):
