@@ -16,10 +16,10 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-population_size = 200
+population_size = 500
 number_of_generations = 200
-crossover_rate = 0.7
-mutation_rate = 0.7
+crossover_rate = 0.3
+mutation_rate = 0.8
 
 class Grid_cell:
     def __init__(self, x, y, w, h):
@@ -205,6 +205,13 @@ for y in range(grid_height):
 calc_button = Grid_cell(601, 101, 100, 50)
 print(calc_button.x_coord, calc_button.y_coord)
 
+for cell in board:
+    pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+    if cell.passable == False:
+        pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
+
+pygame.draw.rect(grid_surface, "white", (calc_button.x, calc_button.y, calc_button.w, calc_button.h))
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -226,6 +233,11 @@ while running:
 
                 elif event.button == 3:
                     current_cell.change_passable_state()
+                
+                for cell in board:
+                    pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+                    if cell.passable == False:
+                        pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
             if (col == calc_button.x_coord + 1 or col == calc_button.x_coord + 2) and row == (calc_button.y_coord + 1):
                 selected_cells_list = []
@@ -234,18 +246,28 @@ while running:
                         selected_cells_list.append(cell)
                 shortest_path = run_genetic_algorithm(selected_cells_list, population_size)
 
-    # if 'shortest_path' in locals():
-    #     print(shortest_path)
+                for cell in board:
+                    pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+                    if cell.passable == False:
+                        pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
-    for cell in board:
-        pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
-        if cell.passable == False:
-            pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
+                for i in range(len(shortest_path)):
+                    cell  = shortest_path[i]
+                    
+                    if i == len(shortest_path) - 1:
+                        next_cell = shortest_path[0]
+                    
+                    else:
+                        next_cell = shortest_path[i + 1]
+
+                    pygame.draw.line(grid_surface, "red", ((cell.x + cell.w /2), cell.y + cell.h / 2), ((next_cell.x + next_cell.w /2), next_cell.y + next_cell.h / 2) , 3)
+    # for cell in board:
+    #     pygame.draw.rect(grid_surface, cell.fill_color, (cell.x, cell.y, cell.w, cell.h))
+    #     if cell.passable == False:
+    #         pygame.draw.rect(grid_surface, cell.border_color, (cell.x, cell.y, cell.w, cell.h), width = 3)
 
     pygame.draw.rect(grid_surface, "white", (calc_button.x, calc_button.y, calc_button.w, calc_button.h))
-    # for cell in shortest_path:
-    #     pygame.draw.line(grid_surface, "red", ((cell.x + cell.w /2), cell.y + cell.h / 2), (20, 20) , 3)
-            
+  
     pygame.display.flip()
     
     clock.tick(60)
