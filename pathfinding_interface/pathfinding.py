@@ -16,9 +16,9 @@ grid_height = 9
 cell_width = 50
 cell_height = 50
 
-population_size = 500
-number_of_generations = 200
-crossover_rate = 0.3
+population_size = 200
+number_of_generations = 300
+crossover_rate = 0.6
 mutation_rate = 0.8
 
 class Grid_cell:
@@ -154,6 +154,8 @@ def generate_offspring(population, population_fitness_probabilities, population_
 
 def perform_replacement(mixed_offspring, crossover_rate, population_size, population):
     fitness_probabilities = calculate_fitness_probabilities(mixed_offspring)
+    
+    # Maybe do random selection here as well? To escape local optima
     sorted_fitness_indices = np.argsort(fitness_probabilities)[::-1]
     best_fitness_indices = sorted_fitness_indices[0:int(crossover_rate * population_size)]
 
